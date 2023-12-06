@@ -1,92 +1,100 @@
-<!--
-title: 'AWS Simple HTTP Endpoint example in NodeJS'
-description: 'This template demonstrates how to make a simple HTTP API with Node.js running on AWS Lambda and API Gateway using the Serverless Framework.'
-layout: Doc
-framework: v3
-platform: AWS
-language: nodeJS
-authorLink: 'https://github.com/serverless'
-authorName: 'Serverless, inc.'
-authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
--->
+<div align="center">
+<h1 align="center">
+<img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" width="100" />
+<br>SERVERLESS-NODEJS</h1>
+<h3>Módulo de Usuários</h3>
+<h3>Desenvolvido com as tecnologias abaixo</h3>
 
-# Serverless Framework Node HTTP API on AWS
+<p align="center">
+<img src="https://img.shields.io/badge/Twilio-F22F46.svg?style=flat-square&logo=Twilio&logoColor=white" alt="Twilio" />
+<img src="https://img.shields.io/badge/YAML-CB171E.svg?style=flat-square&logo=YAML&logoColor=white" alt="YAML" />
+<img src="https://img.shields.io/badge/tsnode-3178C6.svg?style=flat-square&logo=ts-node&logoColor=white" alt="tsnode" />
+<img src="https://img.shields.io/badge/TypeScript-3178C6.svg?style=flat-square&logo=TypeScript&logoColor=white" alt="TypeScript" />
+<img src="https://img.shields.io/badge/JSON-000000.svg?style=flat-square&logo=JSON&logoColor=white" alt="JSON" />
+</p>
+<img src="https://img.shields.io/github/license/Drack112/Serverless-NodeJS?style=flat-square&color=5D6D7E" alt="GitHub license" />
+<img src="https://img.shields.io/github/last-commit/Drack112/Serverless-NodeJS?style=flat-square&color=5D6D7E" alt="git-last-commit" />
+<img src="https://img.shields.io/github/commit-activity/m/Drack112/Serverless-NodeJS?style=flat-square&color=5D6D7E" alt="GitHub commit activity" />
+<img src="https://img.shields.io/github/languages/top/Drack112/Serverless-NodeJS?style=flat-square&color=5D6D7E" alt="GitHub top language" />
+</div>
 
-This template demonstrates how to make a simple HTTP API with Node.js running on AWS Lambda and API Gateway using the Serverless Framework.
+---
 
-This template does not include any kind of persistence (database). For more advanced examples, check out the [serverless/examples repository](https://github.com/serverless/examples/) which includes Typescript, Mongo, DynamoDB and other examples.
+## 📖 Conteúdos
+- [📍 Overview](#-overview)
+- [📂 Estrutura](#-repository-structure)
+- [🚀 Executando](#-getting-started)
+    - [🔧 Instalação](#-installation)
+    - [🤖 Rodando o módulo de usuários](#-running-Serverless-NodeJS)
+---
 
-## Usage
 
-### Deployment
+## 📍 Overview
 
-```
-$ serverless deploy
-```
+O módulo de usuário permite a comunicação entre o usuário com a função de lambda responsável por, criar, logar, verificar e editar o usuário dentro do container da AWS. É o primeiro módulo Lambda criado no projeto.
 
-After deploying, you should see output similar to:
 
-```bash
-Deploying aws-node-http-api-project to stage dev (us-east-1)
 
-✔ Service deployed to stack aws-node-http-api-project-dev (152s)
+## 📂 Estrutura do Projeto
 
-endpoint: GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/
-functions:
-  hello: aws-node-http-api-project-dev-hello (1.9 kB)
-```
-
-_Note_: In current form, after deployment, your API is public and can be invoked by anyone. For production deployments, you might want to configure an authorizer. For details on how to do that, refer to [http event docs](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/).
-
-### Invocation
-
-After successful deployment, you can call the created application via HTTP:
-
-```bash
-curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/
-```
-
-Which should result in response similar to the following (removed `input` content for brevity):
-
-```json
-{
-  "message": "Go Serverless v2.0! Your function executed successfully!",
-  "input": {
-    ...
-  }
-}
-```
-
-### Local development
-
-You can invoke your function locally by using the following command:
-
-```bash
-serverless invoke local --function hello
-```
-
-Which should result in response similar to the following:
+```sh
+└── Serverless-NodeJS/
+    └── user-services/
+        ├── Makefile
+        ├── UserTable.sql
+        ├── app/
+        │   ├── handler.ts
+        │   ├── handlers/
+        │   ├── models/
+        │   ├── repository/
+        │   ├── service/
+        │   └── utils/
+        ├── docker-compose.yml
+        ├── package.json
+        ├── serverless.yml
+        ├── tsconfig.json
+        └── yarn.lock
 
 ```
-{
-  "statusCode": 200,
-  "body": "{\n  \"message\": \"Go Serverless v3.0! Your function executed successfully!\",\n  \"input\": \"\"\n}"
-}
+
+---
+
+
+## 🚀 Rodando
+
+***Dependências***
+
+Tenha certeza de que você tenha localmente instalado:
+
+`- ℹ️ NodeJS`
+
+`- ℹ️ Docker`
+
+`- ℹ️ Conta na AWS (Se quiser fazer deploy em uma instancia pessoal)`
+
+`- ℹ️ Conta na Twilio (Serviço de email e notificação)`
+
+### 🔧 Instalação
+
+1. Clone o repositório:
+```sh
+git clone https://github.com/Drack112/Serverless-NodeJS
 ```
 
-
-Alternatively, it is also possible to emulate API Gateway and Lambda locally by using `serverless-offline` plugin. In order to do that, execute the following command:
-
-```bash
-serverless plugin install -n serverless-offline
+2. Entre no diretório de usuários:
+```sh
+cd Serverless-NodeJS/user-service
 ```
 
-It will add the `serverless-offline` plugin to `devDependencies` in `package.json` file as well as will add it to `plugins` in `serverless.yml`.
-
-After installation, you can start local emulation with:
-
-```
-serverless offline
+3. Instale as dependências:
+```sh
+npm install
 ```
 
-To learn more about the capabilities of `serverless-offline`, please refer to its [GitHub repository](https://github.com/dherault/serverless-offline).
+### 🤖 Execute o ambiente em modo de desenvolvimento
+
+```sh
+npm run dev
+```
+
+---
