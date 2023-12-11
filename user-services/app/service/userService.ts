@@ -1,3 +1,5 @@
+import { TimeDifference } from "../utils/dataHelper";
+import { VerificationInput } from "../models/UpdateInput";
 import { LoginInput } from "../models/dto/LoginInput";
 import { SignInput } from "../models/dto/SignInput";
 import { UserRepository } from "../repository/userRepository";
@@ -23,6 +25,10 @@ export class UserService {
   repository: UserRepository;
   constructor(repository: UserRepository) {
     this.repository = repository;
+  }
+
+  async ResponseWithError(event: APIGatewayProxyEventV2) {
+    return ErrorResponse(404, "requested method is not supported!");
   }
 
   // User Creation, Validation & Login
@@ -77,7 +83,9 @@ export class UserService {
     const payload = await VerifyToken(token);
     if (payload) {
       const { code, expiry } = GenerateAccessCode();
-      const response = await SendVerificationCode(code, payload.phone);
+
+      await this.repository.updateVerification(payload.user_id, code, expiry);
+      await SendVerificationCode(code, payload.phone);
       return SuccessResponse({
         message: "verification code is sent to your registered mobile number!",
       });
@@ -85,7 +93,30 @@ export class UserService {
   }
 
   async VerifyUser(event: APIGatewayProxyEventV2) {
-    return SuccessResponse({ message: "response from Verify User" });
+    const token = event.headers.authorization;
+    const payload = await VerifyToken(token);
+    if (!payload) return ErrorResponse(403, "authorization failed!");
+
+    const input = plainToClass(VerificationInput, event.body);
+    const error = await AppValidationError(input);
+    if (error) return ErrorResponse(404, error);
+
+    const { verification_code, expiry } = await this.repository.findAccount(
+      payload.email
+    );
+
+    if (verification_code === parseInt(input.code)) {
+      const currentTime = new Date();
+      const diff = TimeDifference(expiry, currentTime.toISOString(), "m");
+
+      if (diff > 0) {
+        await this.repository.updateVerifyUser(payload.user_id);
+      } else {
+        return ErrorResponse(403, "verification code is expired!");
+      }
+    }
+
+    return SuccessResponse({ message: "user verified!" });
   }
 
   // User profile
