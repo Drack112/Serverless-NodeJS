@@ -10,7 +10,10 @@ migrate:
 migrate-down:
 	db-migrate down
 
+create_migration:
+	db-migrate create $(n) --sql-file
+
 server:
 	yarn dev
 
-.PHONEY: start_db stop_db server migrate migrate-down
+.PHONEY: start_db stop_db server migrate migrate-down create_migration
