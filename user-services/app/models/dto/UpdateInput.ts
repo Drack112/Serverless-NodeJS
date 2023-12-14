@@ -1,6 +1,6 @@
 import { Length } from "class-validator";
 
 export class VerificationInput {
-  @Length(5)
+  @Length(4)
   code: string;
 }
